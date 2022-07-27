@@ -1,0 +1,130 @@
+- 유저 도메인
+    - user table
+        1. 사용자 이름 user_name
+            1. pk unique
+        2. 휴대폰 번호 phone_number
+        3. 이름 name 20자 이상 불가능
+        4. 비밀번호 password 20자 이상 불가능
+        5. 생일 birthday YYYYMMDD 
+        6. 로그인 구분 register → SELF , KAKAO , GOOOGLE
+        7. 회원 상태 status DELETE , VISIBLE , INBISIBLE ,HUMAN
+            -> 비공개인지 공개인지 체크도 가능한 곳
+        9. 약관 동의 날짜 Accept_tc_date
+        10. 자동 로그인을 위한 토큰 Refresh_token
+        11. create_at 이건 가입 날짜로 저장
+        12. update_at
+
+        ------------------------------------------
+
+        - 팔로우 도메인 ( follow domain )
+            1. 팔로우 아이디 follow_id
+            2. 팔로우 할 유저 follow_user
+            3. 팔로우 한 유저 followed_user
+            4. 팔로우 상태 status
+            5. create_at
+            6. update_at
+
+        ------------------------------------------
+
+        - 채팅 도메인 ( chatting domain )
+            1. 채팅 아이디 chatting_id
+            2. 채팅 유저 아이디 user_name
+                FK
+            3. 채팅 상태 status
+            4. 채팅 내용 content 
+            5. create_at
+            6. update_at
+
+    - 소셜 로그인 , 자체 로그인 구분해줘야함
+    - 카카오 구현 해야함
+    - 1년에 한번씩 유저에게 개인정보 처리 동의를 받아야함
+    - 휴먼 , 차단 계정
+
+- 보드 도메인
+    - board table
+    ps. 사진 여러장 가능 , 로 구분하기	
+        1. 게시글 아이디 board_id
+            1. pk unique AI
+        2. 내용 content
+        3. 작성자 아이디 user_name
+        4. 게시글 상태 status -> visible , invisible
+        5. create_at
+        6. update_at
+            -> 비활성화하면 invisible로 변경하기
+            `modified_date` 
+            timestamp
+            NOT NULL 
+            DEFAULT 
+            CURRENT_TIMESTAMP 
+            ON
+            UPDATE CURRENT_TIMESTAMP
+
+        ------------------------------------------
+        
+        - 게시글 좋아요 도메인 ( board like table )
+        1. 게시글 좋아요 아이디 board_like_id
+        2. 게시글 아이디 board_id
+            -> FK board table 에서 가져오기
+        3. 게시글 좋아요 상태 status
+            -> visible invisible
+        4. create_at
+        5. update_at
+        6. 게시글 좋아요한 아이디
+
+        ------------------------------------------
+
+        - 댓글 도메인 ( board_reply table )
+            1. 댓글 아이디 reply_id
+                1. pk unique AI
+            2. 게시글 아이디 board_id
+                -> FK board table 에서 가져오기
+            2. 작성자 아이디 user_name 
+            3. 댓글 내용 content 
+            4. 댓글 상태 status 
+            5. create_at
+            6. update_at
+
+            ------------------------------------------
+
+            - 댓글 좋아요 도메인 (board_reply_like table)
+            1. 댓글 좋아요 아이디 like_id
+            2. 댓글 아이디 reply_id
+                -> FK board_reply table 에서 가져오기
+            3. 댓글 상태 status
+                -> visible invisible
+            4. create_at
+            5. update_at
+
+        ------------------------------------------
+
+        - 이미지 도메인 (board_image table)
+            1. 이미지 아이디 image_id
+            2. 게시글 아이디 board_id
+                -> FK 설정
+            3. 이미지 주소 image_address
+            4. create_at
+            5. update_at
+        
+        ------------------------------------------
+
+        게시글 신고 도메인 ( board report table )
+        1. 게시글 신고 아이디 board_report_id
+        2. 신고 게시글 아이디 board_id
+            FK
+        3. 신고 사유 content
+        4. 신고 아이디 user_name
+            FK user도메인에서 user_name
+        5. create_at
+        6. update_at
+
+        ------------------------------------------
+
+        댓글 신고 도메인 ( reply report table )
+        1. 댓글 신고 아이디 reply_report_id
+        2. 신고 댓글 아이디 reply_id
+            FK 
+        3. 신고 사유 content
+        4. 신고 아이디 user_name
+            FK user도메인에서 user_name
+        5. create_at
+        6. update_at

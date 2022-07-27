@@ -1,0 +1,37 @@
+{
+  "name": "gc_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slbin-park/GC_test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slbin-park/GC_test/issues"
+  },
+  "homepage": "https://github.com/slbin-park/GC_test#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/preset-env": "^7.18.9"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env"
+    ]
+  }
+}
