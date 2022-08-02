@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/test/aws", (req, res) => {
+    console.log('접속했냐')
     res.send('아마존 테스트 성공')
 })
 app.use("/api", routing);
