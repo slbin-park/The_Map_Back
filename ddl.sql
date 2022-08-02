@@ -3,17 +3,18 @@
 -- user Table Create SQL
 CREATE TABLE user
 (
-    `user_name`      VARCHAR(45)    NOT NULL    COMMENT '사용자 이름', 
-    `phone_number`   VARCHAR(20)    NOT NULL    COMMENT '휴대폰번호', 
-    `name`           VARCHAR(20)    NOT NULL    COMMENT '이름', 
-    `password`       VARCHAR(21)    NOT NULL    COMMENT '비밀번호', 
-    `birthday`       DATE           NOT NULL    COMMENT '생일', 
-    `register`       VARCHAR(20)    NOT NULL    COMMENT '로그인구분', 
-    `user_status`    VARCHAR(20)    NOT NULL    COMMENT '유저 상태', 
-    `accept_date`    DATE           NULL        COMMENT '약관 동의 날짜', 
-    `refresh_token`  TEXT           NULL        COMMENT '토큰 저장', 
+    `user_name`      VARCHAR(45)     NOT NULL    COMMENT '사용자 이름', 
+    `phone_number`   VARCHAR(20)     NOT NULL    COMMENT '휴대폰번호', 
+    `name`           VARCHAR(20)     NOT NULL    COMMENT '이름', 
+    `password`       VARCHAR(200)    NULL        COMMENT '비밀번호', 
+    `birthday`       DATE            NOT NULL    COMMENT '생일', 
+    `register`       VARCHAR(20)     NOT NULL    COMMENT '로그인구분', 
+    `user_status`    VARCHAR(20)     NOT NULL    COMMENT '유저 상태', 
+    `accept_date`    DATE            NULL        COMMENT '약관 동의 날짜', 
+    `refresh_token`  TEXT            NULL        COMMENT '토큰 저장', 
     `create_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP      NOT NULL    COMMENT '만든 날짜',
     `update_at`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP      NOT NULL    COMMENT '수정 날짜',
+    `social_id`      VARCHAR(45)     NULL        COMMENT '소셜 아이디', 
      PRIMARY KEY (user_name)
 );
 
@@ -23,7 +24,7 @@ ALTER TABLE user COMMENT '유저 도메인';
 -- board Table Create SQL
 CREATE TABLE board
 (
-    `board_id`       INT            NOT NULL    COMMENT '게시글 아이디', 
+    `board_id`       INT            NOT NULL    AUTO_INCREMENT COMMENT '게시글 아이디', 
     `board_content`  TEXT           NULL        COMMENT '게시글 내용', 
     `user_name_fk`   VARCHAR(45)    NOT NULL    COMMENT '사용자 이름', 
     `board_status`   VARCHAR(45)    NOT NULL    COMMENT '게시글 상태', 
@@ -111,9 +112,9 @@ CREATE TABLE board_like
     `board_like_id`      INT            NOT NULL    AUTO_INCREMENT COMMENT '게시글 좋아요 아이디', 
     `board_id_fk`        INT            NOT NULL    COMMENT '게시글 아이디', 
     `board_like_status`  VARCHAR(45)    NOT NULL    COMMENT '게시글 좋아요 상태', 
-    `user_name_fk`       VARCHAR(45)    NOT NULL    COMMENT '게시글 좋아요한 아이디', 
     `create_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP      NOT NULL    COMMENT '만든 날짜',
     `update_at`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP      NOT NULL    COMMENT '수정 날짜',
+    `user_name_fk`       VARCHAR(45)    NOT NULL    COMMENT '게시글 좋아요한 아이디', 
      PRIMARY KEY (board_like_id)
 );
 
@@ -190,8 +191,8 @@ CREATE TABLE reply_report
     `reply_id_fk`      INT             NOT NULL    COMMENT '신고 댓글 아이디', 
     `report_content`   VARCHAR(100)    NOT NULL    COMMENT '신고 사유', 
     `user_name_fk`     VARCHAR(45)     NOT NULL    COMMENT '신고 유저 아이디', 
-    `create_at`        TIMESTAMP       NOT NULL    COMMENT '만든 날짜', 
-    `update_at`        TIMESTAMP       NOT NULL    COMMENT '수정 날짜', 
+    `create_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP      NOT NULL    COMMENT '만든 날짜',
+    `update_at`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP      NOT NULL    COMMENT '수정 날짜',
      PRIMARY KEY (reply_report_id)
 );
 

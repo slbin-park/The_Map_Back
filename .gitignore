@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .env
+.sql
 package-lock.json
 
 # testing
