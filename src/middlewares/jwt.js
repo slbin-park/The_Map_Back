@@ -59,13 +59,13 @@ const check_access_token = (req, res, next) => {
 };
 
 const check_refresh_token = async (refresh_token) => {
+    const conn = await pool.getConnection(async (conn) => conn);
+
     try {
         const secret_key = process.env.JWT_REFRESH_SECRET;
-        const token = jwt.verify(refresh_token, secret_key);
-        return {
-            token,
-            success: true,
-        };
+        const token = await jwt.verify(refresh_token, secret_key);
+        const user_data = await jwtRepository.Get_Refresh_Token(conn, refresh_token)
+        return { success: true, user_data }
     } catch (error) {
         console.log(error.name);
         // 유효기간이 초과된 경우
@@ -74,6 +74,8 @@ const check_refresh_token = async (refresh_token) => {
         }
         // 토큰의 비밀키가 일치하지 않는 경우
         return { success: false, msg: '유효하지 않은 토큰입니다.' }; // 401 추가예정
+    } finally {
+        conn.release();
     }
 };
 

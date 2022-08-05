@@ -41,6 +41,22 @@ const UserController = {
         } catch (err) {
             console.log(err)
         }
+    },
+
+    get_auto_login: async (req, res) => {
+        try {
+            let refresh_token = req.headers.authorization
+            if (!refresh_token) {
+                res.send('리프레시 토큰이 없음 실패')
+            }
+            else {
+                refresh_token = refresh_token.split(' ')[1]
+                const response = await UserService.Get_auto_login(refresh_token)
+                res.json(response);
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 

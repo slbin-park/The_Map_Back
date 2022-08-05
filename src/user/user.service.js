@@ -79,3 +79,22 @@ exports.Post_login = async function (user_id, password) {
         conn.release();
     }
 }
+
+exports.Get_auto_login = async function (refresh_token) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const user_data = await jwt.check_refresh_token(refresh_token)
+        if (user_data.success) {
+            const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
+            return { access_token }
+        }
+        else {
+            return ('검증 실패')
+        }
+    } catch (err) {
+        console.log(err)
+        return err
+    } finally {
+        conn.release();
+    }
+}
