@@ -1,6 +1,4 @@
 import express from "express";
-import UserRouter from "../user/user.controller";
-import { check_req } from "../middlewares/userValidation";
 import CommunityController from "../community/community.controller";
 const router = express.Router();
 
@@ -9,7 +7,11 @@ router.get("/", CommunityController.get_community);
 
 router.get("/:id", CommunityController.get_community_id);
 
-router.post("/", check_req, CommunityController.post_community);
+// 로그인
+router.get("/login", CommunityController.get_community_id)
+
+// 회원 가입
+router.post("/", CommunityController.post_community);
 
 
 export default router;

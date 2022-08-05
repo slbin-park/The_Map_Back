@@ -1,6 +1,6 @@
 const SAVE_USER = `
 INSERT
-INTO user(id , user_name , password , email  ) 
+INTO user(user_id , user_name , password , email  ) 
 VALUES(? , ? , ? ,?);
 `
 
@@ -12,7 +12,7 @@ FROM user;
 const GET_USER_ID = `
 SELECT *
 FROM user
-WHERE id = ?
+WHERE user_id = ?
 `
 
 export {

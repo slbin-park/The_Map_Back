@@ -1,6 +1,6 @@
 import express from "express";
-import user from "./userRouter";
-import community from './communityRouter'
+import user from "../user/userRouter";
+import community from '../community/communityRouter'
 
 const router = express();
 

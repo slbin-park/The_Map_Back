@@ -6,8 +6,8 @@ import UserService from './user.service'
 const UserController = {
     post_user: async (req, res) => {
         try {
-            const { id, password, user_name, email } = req.body
-            const response = await UserService.Save_user(id, password, email, user_name)
+            const { user_id, password, user_name, email } = req.body
+            const response = await UserService.Save_user(user_id, password, email, user_name)
             res.json(response);
         } catch (err) {
             console.log(err)
@@ -27,6 +27,16 @@ const UserController = {
         try {
             const id = req.params.id
             const response = await UserService.Get_user_id(id)
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    post_login: async (req, res) => {
+        try {
+            const { user_id, password } = req.body
+            const response = await UserService.Post_login(user_id, password)
             res.json(response);
         } catch (err) {
             console.log(err)

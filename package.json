@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/slbin-park/GC_test#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.19"
   },
@@ -28,7 +30,8 @@
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
     "@babel/node": "^7.18.9",
-    "@babel/preset-env": "^7.18.9"
+    "@babel/preset-env": "^7.18.9",
+    "eslint": "^8.21.0"
   },
   "babel": {
     "presets": [
