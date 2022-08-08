@@ -50,6 +50,7 @@ const UserController = {
                 res.send('리프레시 토큰이 없음 실패')
             }
             else {
+                console.log(refresh_token)
                 refresh_token = refresh_token.split(' ')[1]
                 const response = await UserService.Get_auto_login(refresh_token)
                 res.json(response);
