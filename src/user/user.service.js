@@ -2,10 +2,9 @@ import * as express from 'express';
 import UserRepository from './user.dao';
 import pool from '../config/db';
 import * as jwt from '../middlewares/jwt'
-import response from "../config/response"
+import { response } from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-import response from '../config/response'
 import baseResponse from '../config/baseReponse'
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
