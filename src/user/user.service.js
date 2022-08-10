@@ -5,6 +5,8 @@ import * as jwt from '../middlewares/jwt'
 import response from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+import response from '../config/response'
+import baseResponse from '../config/baseReponse'
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
 exports.Save_user = async function (user_id, password, email, user_name) {
@@ -68,7 +70,7 @@ exports.Post_login = async function (user_id, password) {
             const access_token = await jwt.create_access_token(user_data[0].user_idx)
             const refresh_token = await jwt.create_refresh_token();
             await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
-            return { access_token, refresh_token, msg: '로그인성공' }
+            return response(baseResponse.SUCCESS, { access_token, refresh_token })
         }
         else {
             return ('로그인 실패')
@@ -87,7 +89,7 @@ exports.Get_access_token = async function (refresh_token) {
         const user_data = await jwt.check_refresh_token(refresh_token)
         if (user_data.success) {
             const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
-            return { access_token }
+            return response(baseResponse.SUCCESS, access_token)
         }
         else {
             return ('검증 실패')

@@ -1,5 +1,5 @@
 import '../config/env'
-import { pool } from '../config/db'
+import pool from '../config/db'
 const jwt = require('jsonwebtoken');
 import * as jwtRepository from './jwt.dao'
 
