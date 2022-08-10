@@ -1,6 +1,6 @@
 import * as express from 'express';
 import CommunityRepository from './community.dao'
-import { pool } from '../config/db';
+import pool from '../config/db';
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
 exports.Save_community = async function (home_name, lati, longi, tag, price, site, reason, user_id, category, images) {

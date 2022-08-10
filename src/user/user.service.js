@@ -1,6 +1,6 @@
 import * as express from 'express';
 import UserRepository from './user.dao';
-import { pool } from '../config/db';
+import pool from '../config/db';
 import * as jwt from '../middlewares/jwt'
 import response from "../config/response"
 const bcrypt = require('bcrypt');
