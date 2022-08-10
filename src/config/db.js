@@ -9,6 +9,4 @@ const pool = mysql.createPool({
   database: process.env.DATABASE,
 });
 
-module.exports = {
-  pool
-};
+export default pool;

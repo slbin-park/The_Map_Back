@@ -2,6 +2,7 @@ import * as express from 'express';
 import UserRepository from './user.dao';
 import { pool } from '../config/db';
 import * as jwt from '../middlewares/jwt'
+import response from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 // datamanager 에서 데이틀 가져와
@@ -80,7 +81,7 @@ exports.Post_login = async function (user_id, password) {
     }
 }
 
-exports.Get_auto_login = async function (refresh_token) {
+exports.Get_access_token = async function (refresh_token) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const user_data = await jwt.check_refresh_token(refresh_token)

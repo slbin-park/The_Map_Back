@@ -1,5 +1,5 @@
 import * as express from 'express';
-import UserService from './user.service'
+import * as UserService from './user.service'
 
 // 컨트롤러에는 유효성 검사 , 데이터 컨버팅 후 
 // 서비스 레이어와 상호작용만 하도록
@@ -43,7 +43,7 @@ const UserController = {
         }
     },
 
-    get_auto_login: async (req, res) => {
+    get_access_token: async (req, res) => {
         try {
             let refresh_token = req.headers.authorization
             if (!refresh_token) {
@@ -52,7 +52,7 @@ const UserController = {
             else {
                 console.log(refresh_token)
                 refresh_token = refresh_token.split(' ')[1]
-                const response = await UserService.Get_auto_login(refresh_token)
+                const response = await UserService.Get_access_token(refresh_token)
                 res.json(response);
             }
         } catch (err) {
