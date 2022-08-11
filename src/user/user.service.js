@@ -91,7 +91,7 @@ exports.Get_access_token = async function (refresh_token) {
             return response(baseResponse.SUCCESS, access_token)
         }
         else {
-            return ('검증 실패')
+            return response(baseResponse.SIGN_USER_NOTHING)
         }
     } catch (err) {
         console.log(err)

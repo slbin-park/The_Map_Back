@@ -25,6 +25,7 @@ module.exports = {
 
     SIGNIN_EMAIL_WRONG: { isSuccess: false, code: 3003, msg: '아이디가 잘못 되었습니다.' },
     SIGNIN_PASSWORD_WRONG: { isSuccess: false, code: 3004, msg: '비밀번호가 잘못 되었습니다.' },
+    SIGN_USER_NOTHING: { isSuccess: false, code: 3005, msg: '없는 유저 입니다.' },
     SIGNIN_INACTIVE_ACCOUNT: {
         isSuccess: false,
         code: 3005,
