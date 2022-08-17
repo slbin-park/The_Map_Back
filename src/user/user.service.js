@@ -2,7 +2,7 @@ import * as express from 'express';
 import UserRepository from './user.dao';
 import pool from '../config/db';
 import * as jwt from '../middlewares/jwt'
-import { response } from "../config/response"
+import { response, errResponse } from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 import baseResponse from '../config/baseReponse'
@@ -11,19 +11,20 @@ import baseResponse from '../config/baseReponse'
 exports.Save_user = async function (user_id, password, email, user_name) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        let msg = '저장 성공'
-        // console.log(pool)
+        // 비밀번호 암호화
         password = await bcrypt.hash(password, saltRounds);
-        console.log(password)
+        // DB에 넣을 데이터
         const board_info = [user_id, user_name, password, email]
-        const response = await UserRepository.insertPost(conn, board_info);
+        const user_res = await UserRepository.insertPost(conn, board_info);
+
+        // 토큰 생성
         const access_token = await jwt.create_access_token(response.insertId)
         const refresh_token = await jwt.create_refresh_token();
         await jwt.save_refresh_token(response.insertId, refresh_token)
-        return { response, msg, access_token, refresh_token }
+        return response(baseResponse.SUCCESS, { access_token, refresh_token })
     } catch (err) {
-        console.log(err)
-        return err
+        logger.error(`App - Save_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }
@@ -37,8 +38,8 @@ exports.Get_user = async function () {
         const response = await UserRepository.selectUser(conn);
         return { response: response[0] }
     } catch (err) {
-        console.log(err)
-        return err
+        logger.error(`App - Get_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }
@@ -52,8 +53,8 @@ exports.Get_user_id = async function (id) {
         const response = await UserRepository.selectUserId(conn, id);
         return { response: response[0] }
     } catch (err) {
-        console.log(err)
-        return err
+        logger.error(`App - Get_user_id UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }
@@ -75,8 +76,8 @@ exports.Post_login = async function (user_id, password) {
             return ('로그인 실패')
         }
     } catch (err) {
-        console.log(err)
-        return err
+        logger.error(`App - Post_login JWT error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }
@@ -94,8 +95,8 @@ exports.Get_access_token = async function (refresh_token) {
             return response(baseResponse.SIGN_USER_NOTHING)
         }
     } catch (err) {
-        console.log(err)
-        return err
+        logger.error(`App - Get_access_token UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }

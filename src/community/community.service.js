@@ -5,7 +5,6 @@ import pool from '../config/db';
 exports.Save_community = async function (home_name, lati, longi, tag, price, site, reason, user_id, category, images) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        let msg = '저장 성공'
         // console.log(pool)
         const status = 'ACTIVE'
         const community_info = [home_name, lati, longi, tag, price, site, reason, user_id, status, category]
