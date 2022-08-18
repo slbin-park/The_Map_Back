@@ -6,6 +6,8 @@ import { response, errResponse } from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 import baseResponse from '../config/baseReponse'
+import logger from '../config/winston';
+
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
 exports.Save_user = async function (user_id, password, email, user_name) {
@@ -16,12 +18,12 @@ exports.Save_user = async function (user_id, password, email, user_name) {
         // DB에 넣을 데이터
         const board_info = [user_id, user_name, password, email]
         const user_res = await UserRepository.insertPost(conn, board_info);
-
+        const user_idx = user_res.insertId
         // 토큰 생성
         const access_token = await jwt.create_access_token(response.insertId)
         const refresh_token = await jwt.create_refresh_token();
         await jwt.save_refresh_token(response.insertId, refresh_token)
-        return response(baseResponse.SUCCESS, { access_token, refresh_token })
+        return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
     } catch (err) {
         logger.error(`App - Save_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -70,7 +72,10 @@ exports.Post_login = async function (user_id, password) {
             const access_token = await jwt.create_access_token(user_data[0].user_idx)
             const refresh_token = await jwt.create_refresh_token();
             await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
-            return response(baseResponse.SUCCESS, { access_token, refresh_token })
+            const user_idx = user_data[0].user_idx
+            const user_name = user_data[0].user_name
+            console.log(user_idx)
+            return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
         }
         else {
             return ('로그인 실패')
@@ -88,8 +93,10 @@ exports.Get_access_token = async function (refresh_token) {
     try {
         const user_data = await jwt.check_refresh_token(refresh_token)
         if (user_data.success) {
+            const user_idx = user_data.user_data[0].user_idx
+            const user_name = user_data.user_data[0].user_name
             const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
-            return response(baseResponse.SUCCESS, access_token)
+            return response(baseResponse.SUCCESS, { user_idx, user_name, access_token })
         }
         else {
             return response(baseResponse.SIGN_USER_NOTHING)
