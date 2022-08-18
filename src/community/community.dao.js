@@ -1,4 +1,4 @@
-import { SAVE_COMMUNITY, GET_COMMUNITY, GET_COMMUNITY_ID } from './community.sql'
+import { SAVE_COMMUNITY, GET_COMMUNITY, GET_COMMUNITY_ID, SAVE_COMMUNITY_IMG } from './community.sql'
 
 
 async function insertPost(conn, communityInfo) {
@@ -6,6 +6,10 @@ async function insertPost(conn, communityInfo) {
         communityInfo
     );
     return save_user;
+}
+async function insertPostImg(conn, img_info) {
+    const save_img = await conn.query(SAVE_COMMUNITY_IMG, img_info)
+    return save_img;
 }
 async function selectCommunity(conn) {
     const get_user = await conn.query(GET_COMMUNITY);
@@ -18,5 +22,6 @@ async function selectCommunityId(conn, id) {
 module.exports = {
     insertPost,
     selectCommunity,
-    selectCommunityId
+    selectCommunityId,
+    insertPostImg
 }

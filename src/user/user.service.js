@@ -35,8 +35,6 @@ exports.Save_user = async function (user_id, password, email, user_name) {
 exports.Get_user = async function () {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        let msg = '저장 성공'
-        // console.log(pool)
         const response = await UserRepository.selectUser(conn);
         return { response: response[0] }
     } catch (err) {
@@ -50,8 +48,6 @@ exports.Get_user = async function () {
 exports.Get_user_id = async function (id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        let msg = '저장 성공'
-        // console.log(pool)
         const response = await UserRepository.selectUserId(conn, id);
         return { response: response[0] }
     } catch (err) {
@@ -74,7 +70,6 @@ exports.Post_login = async function (user_id, password) {
             await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
             const user_idx = user_data[0].user_idx
             const user_name = user_data[0].user_name
-            console.log(user_idx)
             return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
         }
         else {
