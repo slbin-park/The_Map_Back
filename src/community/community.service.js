@@ -4,11 +4,11 @@ import pool from '../config/db';
 import { response, errResponse } from '../config/response'
 import baseResponse from '../config/baseResponse'
 import logger from '../config/winston';
-exports.Save_community = async function (home_name, lati, longi, tag, price, site, reason, user_id, category, images) {
+exports.Save_community = async function (home_name, lati, longi, tag, price, site, reason, user_idx_fk, category, images) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const status = 'ACTIVE'
-        const community_info = [home_name, lati, longi, tag, price, site, reason, user_id, status, category]
+        const community_info = [home_name, lati, longi, tag, price, site, reason, user_idx_fk, status, category]
         const res = await CommunityRepository.insertPost(conn, community_info);
         for (image_url of images) {
             const insertPostImgParams = [res.insertId, images];
