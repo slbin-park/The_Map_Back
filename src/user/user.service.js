@@ -5,14 +5,19 @@ import * as jwt from '../middlewares/jwt'
 import { response, errResponse } from "../config/response"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-import baseResponse from '../config/baseReponse'
+import baseResponse from '../config/baseResponse'
 import logger from '../config/winston';
+
 
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
 exports.Save_user = async function (user_id, password, email, user_name) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
+        const check_user = await UserRepository.selectUserId(conn, user_id);
+        if (check_user.length) {
+            return response(baseResponse.SIGNUP_REDUNDANT_USER_NAME);
+        }
         // 비밀번호 암호화
         password = await bcrypt.hash(password, saltRounds);
         // DB에 넣을 데이터

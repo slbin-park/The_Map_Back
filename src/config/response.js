@@ -7,7 +7,7 @@ const response = ({ isSuccess, code, msg }, result) => {
     };
 };
 
-const errResponse = ({ isSuccess, code, message }) => {
+const errResponse = ({ isSuccess, code, msg }) => {
     return {
         isSuccess,
         code,

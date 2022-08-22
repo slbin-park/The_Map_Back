@@ -2,7 +2,7 @@ import * as express from 'express';
 import CommunityRepository from './community.dao'
 import pool from '../config/db';
 import { response, errResponse } from '../config/response'
-import baseResponse from '../config/baseReponse'
+import baseResponse from '../config/baseResponse'
 import logger from '../config/winston';
 exports.Save_community = async function (home_name, lati, longi, tag, price, site, reason, user_id, category, images) {
     const conn = await pool.getConnection(async (conn) => conn);
@@ -42,9 +42,9 @@ exports.Get_community_id = async function (id) {
     try {
         let msg = '조회 성공'
         // console.log(pool)
-        const response = await CommunityRepository.selectCommunityId(conn, id);
-        if (response[0].length) {
-            return { response: response[0], msg }
+        const res = await CommunityRepository.selectCommunityId(conn, id);
+        if (rse[0].length) {
+            return response(baseResponse.SUCCESS, res)
         }
         else {
             return { msg: '없는 게시글입니다.' }
