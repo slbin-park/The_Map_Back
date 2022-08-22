@@ -1,7 +1,7 @@
 import { SAVE_COMMUNITY, GET_COMMUNITY, GET_COMMUNITY_ID, SAVE_COMMUNITY_IMG } from './community.sql'
 
 
-const insertPost = (conn, communityInfo) => {
+const insertPost = async (conn, communityInfo) => {
     const save_user = await conn.query(SAVE_COMMUNITY,
         communityInfo
     );
