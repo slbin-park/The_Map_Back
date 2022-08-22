@@ -1,7 +1,7 @@
 const SAVE_COMMUNITY = `
 INSERT
-INTO community( home_name ,lati , longi , tag, price ,site , reason , user_idx_fk, status , category) 
-VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ?);
+INTO community( home_name ,lati , longi , tag, price ,site , reason , user_idx_fk, status , category, location) 
+VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?);
 `
 
 const SAVE_COMMUNITY_IMG = `
@@ -9,6 +9,13 @@ INSERT INTO
 community_image(commu_id_fk, address)
 VALUES ( ? , ? )
 `
+
+const SAVE_COMMUNITY_TAG = `
+INSERT INTO
+community_tag(commu_id_fk,tag_name)
+VALUES ( ? , ? )
+`
+
 
 const GET_COMMUNITY = `
 SELECT *
@@ -21,10 +28,10 @@ FROM community
 WHERE id = ?
 `
 
-
 export {
     SAVE_COMMUNITY,
     GET_COMMUNITY,
     GET_COMMUNITY_ID,
-    SAVE_COMMUNITY_IMG
+    SAVE_COMMUNITY_IMG,
+    SAVE_COMMUNITY_TAG
 }

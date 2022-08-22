@@ -11,7 +11,7 @@ import logger from '../config/winston';
 
 // datamanager 에서 데이틀 가져와
 // 컨트롤러로 반환해주는 역할
-exports.Save_user = async function (user_id, password, email, user_name) {
+const Save_user = async function (user_id, password, email, user_name) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const check_user = await UserRepository.selectUserId(conn, user_id);
@@ -28,6 +28,7 @@ exports.Save_user = async function (user_id, password, email, user_name) {
         const access_token = await jwt.create_access_token(response.insertId)
         const refresh_token = await jwt.create_refresh_token();
         await jwt.save_refresh_token(response.insertId, refresh_token)
+        conn.commit();
         return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
     } catch (err) {
         logger.error(`App - Save_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -37,10 +38,11 @@ exports.Save_user = async function (user_id, password, email, user_name) {
     }
 }
 
-exports.Get_user = async function () {
+const Get_user = async function () {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const response = await UserRepository.selectUser(conn);
+        conn.commit();
         return { response: response[0] }
     } catch (err) {
         logger.error(`App - Get_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -50,10 +52,11 @@ exports.Get_user = async function () {
     }
 }
 
-exports.Get_user_id = async function (id) {
+const Get_user_id = async function (id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const response = await UserRepository.selectUserId(conn, id);
+        conn.commit();
         return { response: response[0] }
     } catch (err) {
         logger.error(`App - Get_user_id UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -64,7 +67,7 @@ exports.Get_user_id = async function (id) {
 }
 
 
-exports.Post_login = async function (user_id, password) {
+const Post_login = async function (user_id, password) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const user_data = await UserRepository.selectUserId(conn, user_id);
@@ -75,20 +78,21 @@ exports.Post_login = async function (user_id, password) {
             await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
             const user_idx = user_data[0].user_idx
             const user_name = user_data[0].user_name
+            conn.commit();
             return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
         }
         else {
-            return ('로그인 실패')
+            return response(baseResponse.LOGIN_FAIL)
         }
     } catch (err) {
-        logger.error(`App - Post_login JWT error\n: ${err.message} \n${JSON.stringify(err)}`);
+        logger.error(`App - Post_login UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
     }
 }
 
-exports.Get_access_token = async function (refresh_token) {
+const Get_access_token = async function (refresh_token) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const user_data = await jwt.check_refresh_token(refresh_token)
@@ -96,6 +100,7 @@ exports.Get_access_token = async function (refresh_token) {
             const user_idx = user_data.user_data[0].user_idx
             const user_name = user_data.user_data[0].user_name
             const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
+            conn.commit();
             return response(baseResponse.SUCCESS, { user_idx, user_name, access_token })
         }
         else {
@@ -107,4 +112,12 @@ exports.Get_access_token = async function (refresh_token) {
     } finally {
         conn.release();
     }
+}
+
+export {
+    Save_user,
+    Get_user,
+    Post_login,
+    Get_access_token,
+    Get_user_id
 }
