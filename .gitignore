@@ -7,7 +7,7 @@
 .env
 .sql
 package-lock.json
-
+/log
 # testing
 /coverage
 
