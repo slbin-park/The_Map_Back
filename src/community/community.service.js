@@ -32,10 +32,11 @@ const Save_community = async function (home_name, lati, longi, tags, price, site
     }
 }
 
-const Get_community = async function (last_community_id) {
+const Get_community = async function (last_community_id, user_id = 0) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        const res = await CommunityRepository.getCommunityAll(conn, last_community_id);
+        const commu_info = [user_id, user_id, last_community_id]
+        const res = await CommunityRepository.getCommunityAll(conn, commu_info);
         const count = await CommunityRepository.getCommunityCount(conn);
         for (let commu_id of res) {
             const img = await CommunityRepository.getCommunityImage(conn, commu_id.id);

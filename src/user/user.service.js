@@ -59,15 +59,21 @@ const Post_login = async function (user_id, password) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const user_data = await UserRepository.selectUserId(conn, user_id);
-        const check = await bcrypt.compare(password, user_data[0].password);
-        if (check) {
-            const access_token = await jwt.create_access_token(user_data[0].user_idx)
-            const refresh_token = await jwt.create_refresh_token();
-            await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
-            const user_idx = user_data[0].user_idx
-            const user_name = user_data[0].user_name
-            conn.commit();
-            return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
+
+        if (user_data.length) {
+            const check = await bcrypt.compare(password, user_data[0].password);
+            if (check) {
+                const access_token = await jwt.create_access_token(user_data[0].user_idx)
+                const refresh_token = await jwt.create_refresh_token();
+                await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
+                const user_idx = user_data[0].user_idx
+                const user_name = user_data[0].user_name
+                conn.commit();
+                return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
+            }
+            else {
+                return response(baseResponse.LOGIN_FAIL)
+            }
         }
         else {
             return response(baseResponse.LOGIN_FAIL)

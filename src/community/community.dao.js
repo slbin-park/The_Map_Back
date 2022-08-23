@@ -103,11 +103,26 @@ const getCommunityTag = async (conn, commu_id) => {
     return get_tag;
 }
 
+/**
+ * 팔로우상태로직도 넣어보기
+ */
 const getCommunityAll = async (conn, last_community_id) => {
     const sql = `
-    SELECT *
-    FROM community
-    WHERE id < ?
+    SELECT cm.* , us.user_name , us.profile_Url,
+    case
+        when (SELECT follow_status
+            FROM follow
+            WHERE follower_id_fk = ?
+            AND following_id_fk = cm.user_idx_fk
+            ) = 'ACTIVE'
+            OR cm.user_idx_fk = ?
+            then 'FOLLOW'
+        else 'UNFOLLOW'
+        end as follow
+    FROM community cm
+    LEFT JOIN user us
+    ON cm.user_idx_fk = us.user_idx
+    WHERE cm.id < ?
     ORDER BY id DESC
     LIMIT 10;
     `

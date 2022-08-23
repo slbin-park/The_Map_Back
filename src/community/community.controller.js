@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as CommunityService from './community.service'
-
+import * as JWT from '../middlewares/jwt'
 
 const CommunityController = {
 
