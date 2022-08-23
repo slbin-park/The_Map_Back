@@ -1,7 +1,5 @@
 const SAVE_COMMUNITY = `
-INSERT
-INTO community( home_name ,lati , longi , tag, price ,site , reason , user_idx_fk, status , category, location) 
-VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?);
+
 `
 
 const SAVE_COMMUNITY_IMG = `

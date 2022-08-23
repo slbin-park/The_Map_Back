@@ -25,10 +25,10 @@ const Save_user = async function (user_id, password, email, user_name) {
         const user_res = await UserRepository.insertPost(conn, board_info);
         const user_idx = user_res.insertId
         // 토큰 생성
-        const access_token = await jwt.create_access_token(response.insertId)
+        const access_token = await jwt.create_access_token(user_res.insertId)
         const refresh_token = await jwt.create_refresh_token();
-        await jwt.save_refresh_token(response.insertId, refresh_token)
         conn.commit();
+        await jwt.save_refresh_token(user_res.insertId, refresh_token)
         return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
     } catch (err) {
         logger.error(`App - Save_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);

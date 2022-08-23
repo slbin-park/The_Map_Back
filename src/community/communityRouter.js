@@ -1,17 +1,16 @@
 import express from "express";
 import CommunityController from "../community/community.controller";
+import * as JWT from "../middlewares/jwt"
 const router = express.Router();
 
-// 스케쥴 관련 요청을 scrouter로 이동
+// 전체 다 불러오기
 router.get("/", CommunityController.get_community);
 
 router.get("/:id", CommunityController.get_community_id);
 
-// 로그인
-router.get("/login", CommunityController.get_community_id)
-
-// 회원 가입
-router.post("/", CommunityController.post_community);
+router.get("/main/:user_id", CommunityController.get_main)
+// 메인화면 불러오기
+router.post("/", JWT.check_access_token, CommunityController.post_community);
 
 
 export default router;

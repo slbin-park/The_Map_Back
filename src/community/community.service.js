@@ -1,27 +1,34 @@
 import * as express from 'express';
-import CommunityRepository from './community.dao'
+import * as CommunityRepository from './community.dao'
 import pool from '../config/db';
 import { response, errResponse } from '../config/response'
 import baseResponse from '../config/baseResponse'
 import logger from '../config/winston';
 
 // 숙소 저장
-exports.Save_community = async function (home_name, lati, longi, tags, price, site, reason, user_idx_fk, category, images, location) {
+const Save_community = async function (home_name, lati, longi, tags, price, site, reason, user_id, categorys, images, location) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
+        await conn.beginTransaction()
         const status = 'ACTIVE'
-        const community_info = [home_name, lati, longi, price, site, reason, user_idx_fk, status, category, location]
+        const community_info = [home_name, lati, longi, price, site, reason, user_id, status, location]
         const res = await CommunityRepository.insertPost(conn, community_info);
-        for (image_url of images) {
+        for (let image_url of images) {
             const insertPostImgParams = [res.insertId, image_url];
-            const postImgResult = await postDao.insertPostImg(connection, insertPostImgParams);
+            await CommunityRepository.insertPostImg(conn, insertPostImgParams);
         }
-        for (community_tag of tags) {
+        for (let community_tag of tags) {
             const insertPostTag = [res.insertId, community_tag]
-            // const postTagResult = await postDao.
+            await CommunityRepository.insertPostTag(conn, insertPostTag)
         }
+        for (let community_cate of categorys) {
+            const insertPostCate = [res.insertId, community_cate]
+            await CommunityRepository.insertPostCate(conn, insertPostCate)
+        }
+        await conn.commit();
         return response(baseResponse.SUCCESS)
     } catch (err) {
+        await conn.rollback();
         logger.error(`App - Save_community CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
     } finally {
@@ -29,7 +36,7 @@ exports.Save_community = async function (home_name, lati, longi, tags, price, si
     }
 }
 
-exports.Get_community = async function () {
+const Get_community = async function () {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const res = await CommunityRepository.selectUser(conn);
@@ -42,10 +49,9 @@ exports.Get_community = async function () {
     }
 }
 
-exports.Get_community_id = async function (id) {
+const Get_community_id = async function (id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        // console.log(pool)
         const res = await CommunityRepository.selectCommunityId(conn, id);
         if (rse[0].length) {
             return response(baseResponse.SUCCESS, res)
@@ -59,4 +65,27 @@ exports.Get_community_id = async function (id) {
     } finally {
         conn.release();
     }
+}
+
+const Get_main = async function (start_lati, end_lati, start_longi, end_longi, user_id) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const main_info = [user_id, user_id, start_lati, end_lati, start_longi, end_longi]
+        console.log(main_info)
+        const res = await CommunityRepository.getCommunityMain(conn, main_info);
+        console.log(res)
+        return response(baseResponse.SUCCESS, res)
+    } catch (err) {
+        logger.error(`App - Get_main CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
+
+export {
+    Save_community,
+    Get_community,
+    Get_community_id,
+    Get_main
 }
