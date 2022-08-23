@@ -3,6 +3,7 @@ import pool from '../config/db'
 const jwt = require('jsonwebtoken');
 import * as jwtRepository from './jwt.dao'
 import logger from '../config/winston'
+
 const create_access_token = (user_id) => {
     return new Promise((resolve, reject) => {
         resolve(

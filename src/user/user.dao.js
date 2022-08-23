@@ -38,10 +38,36 @@ const getUserId = async (conn, user_info) => {
     return user_id;
 }
 
+const checkUser = async (conn, user_info) => {
+    const sql = `
+    SELECT *
+    FROM user
+    WHERE user_id = ?
+    AND user_name = ?;
+    `
+    const [user] = await conn.query(sql, user_info);
+    return user;
+}
+
+/**
+ * 유저 비밀번호 변경
+ */
+const updateUserPassword = async (conn, user_info) => {
+    const sql = `
+    UPDATE user
+    SET password = ?
+    WHERE user_idx = ?
+    `
+    const [user] = await conn.query(sql, user_info);
+    return user;
+}
+
 export {
     insertPost,
     selectUser,
     selectUserId,
     updateUserProfile,
-    getUserId
+    getUserId,
+    checkUser,
+    updateUserPassword
 }

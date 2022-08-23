@@ -68,6 +68,31 @@ const UserController = {
         }
     },
 
+    /**
+     * 유저 패스워드 변경하기전 유효한지 체크
+     */
+    check_user_password: async (req, res) => {
+        try {
+            const { user_id, user_name } = req.params
+            const response = await UserService.Check_user(user_id, user_name)
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    /**
+     * 유저 패스워드 변경
+     */
+    update_user_password: async (req, res) => {
+        try {
+            const { user_id, password } = req.body
+            const response = await UserService.Update_user_password(user_id, password)
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
+    },
 }
 
 

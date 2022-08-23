@@ -118,7 +118,48 @@ const Update_user_profile = async function (user_name, profile_url, email, user_
     }
 }
 
+/**
+ * 비밀번호 변경하기 유저 체크
+ */
+const Check_user = async function (user_id, user_name) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const user_info = [user_id, user_name]
+        const check = await UserRepository.checkUser(conn, user_info);
+        if (check.length) {
+            const user_idx = check[0].user_idx
+            const token = await jwt.create_access_token(user_idx)
+            return response(baseResponse.SUCCESS, { token })
+        }
+        else {
+            return response(baseResponse.SIGN_USER_NOTHING)
+        }
+    } catch (err) {
+        logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
 
+/**
+ * 유저 비밀번호 변경
+ */
+const Update_user_password = async function (user_id, password) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        password = await bcrypt.hash(password, saltRounds);
+        const user_info = [password, user_id]
+        const ck = await UserRepository.updateUserPassword(conn, user_info);
+        await conn.commit();
+        return response(baseResponse.SUCCESS)
+    } catch (err) {
+        logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
 
 
 export {
@@ -126,5 +167,7 @@ export {
     Post_login,
     Get_access_token,
     Update_user_profile,
-    Get_user_id
+    Get_user_id,
+    Check_user,
+    Update_user_password
 }
