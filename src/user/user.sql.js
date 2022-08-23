@@ -15,6 +15,7 @@ FROM user
 WHERE user_id = ?
 `
 
+
 export {
     SAVE_USER,
     GET_USER,

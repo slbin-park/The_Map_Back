@@ -1,5 +1,5 @@
 import * as express from 'express';
-import UserRepository from './user.dao';
+import * as UserRepository from './user.dao';
 import pool from '../config/db';
 import * as jwt from '../middlewares/jwt'
 import { response, errResponse } from "../config/response"
@@ -38,12 +38,13 @@ const Save_user = async function (user_id, password, email, user_name) {
     }
 }
 
-const Get_user = async function () {
+const Get_user_id = async function (user_name, email) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        const response = await UserRepository.selectUser(conn);
+        const user_info = [user_name, email]
+        const res = await UserRepository.getUserId(conn, user_info)
         conn.commit();
-        return { response: response[0] }
+        return response(baseResponse.SUCCESS, res)
     } catch (err) {
         logger.error(`App - Get_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -52,19 +53,6 @@ const Get_user = async function () {
     }
 }
 
-const Get_user_id = async function (id) {
-    const conn = await pool.getConnection(async (conn) => conn);
-    try {
-        const response = await UserRepository.selectUserId(conn, id);
-        conn.commit();
-        return { response: response[0] }
-    } catch (err) {
-        logger.error(`App - Get_user_id UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
-        return errResponse(baseResponse.DB_ERROR);
-    } finally {
-        conn.release();
-    }
-}
 
 
 const Post_login = async function (user_id, password) {
@@ -95,6 +83,7 @@ const Post_login = async function (user_id, password) {
 const Get_access_token = async function (refresh_token) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
+        console.log('실행')
         const user_data = await jwt.check_refresh_token(refresh_token)
         if (user_data.success) {
             const user_idx = user_data.user_data[0].user_idx
@@ -104,7 +93,7 @@ const Get_access_token = async function (refresh_token) {
             return response(baseResponse.SUCCESS, { user_idx, user_name, access_token })
         }
         else {
-            return response(baseResponse.SIGN_USER_NOTHING)
+            return response(baseResponse.TOKEN_VERIFICATION_FAILURE)
         }
     } catch (err) {
         logger.error(`App - Get_access_token UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -114,10 +103,28 @@ const Get_access_token = async function (refresh_token) {
     }
 }
 
+const Update_user_profile = async function (user_name, profile_url, email, user_id) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const update_info = [user_name, profile_url, email, user_id]
+        await UserRepository.updateUserProfile(conn, update_info);
+        await conn.commit();
+        return response(baseResponse.SUCCESS)
+    } catch (err) {
+        logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
+
+
+
+
 export {
     Save_user,
-    Get_user,
     Post_login,
     Get_access_token,
+    Update_user_profile,
     Get_user_id
 }

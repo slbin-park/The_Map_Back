@@ -32,11 +32,20 @@ const Save_community = async function (home_name, lati, longi, tags, price, site
     }
 }
 
-const Get_community = async function () {
+const Get_community = async function (last_community_id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        const res = await CommunityRepository.selectUser(conn);
-        response(baseResponse.SUCCESS, res)
+        const res = await CommunityRepository.getCommunityAll(conn, last_community_id);
+        const count = await CommunityRepository.getCommunityCount(conn);
+        for (let commu_id of res) {
+            const img = await CommunityRepository.getCommunityImage(conn, commu_id.id);
+            const tag = await CommunityRepository.getCommunityTag(conn, commu_id.id);
+            commu_id.imgs = img;
+            commu_id.tags = tag
+        }
+        await conn.commit();
+        console.log(count[0].count)
+        return response(baseResponse.SUCCESS, { count: count[0].count, community: res })
     } catch (err) {
         logger.error(`App - Get_community CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);

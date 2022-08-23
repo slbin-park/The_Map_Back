@@ -1,9 +1,9 @@
 import * as express from 'express';
 import * as CommunityService from './community.service'
 
-// 컨트롤러에는 유효성 검사 , 데이터 컨버팅 후 
-// 서비스 레이어와 상호작용만 하도록
+
 const CommunityController = {
+
     // 숙소 저장
     post_community: async (req, res) => {
         try {
@@ -15,6 +15,7 @@ const CommunityController = {
         }
     },
 
+    // 메인화면 진입시 숙소정보 불러오기
     get_main: async (req, res) => {
         try {
             let { start, end } = req.query
@@ -26,21 +27,25 @@ const CommunityController = {
             const end_longi = end[1]
             const { user_id } = req.params
             const response = await CommunityService.Get_main(start_lati, end_lati, start_longi, end_longi, user_id)
-            res.json(response);
+            res.send(response);
         } catch (err) {
             console.log(err)
         }
     },
 
+    // 커뮤니티 불러오기
     get_community: async (req, res) => {
         try {
-            const response = await CommunityService.Get_community()
-            res.json(response);
+            const { last_community_id } = req.params
+            const response = await CommunityService.Get_community(last_community_id)
+            res.send(response);
         } catch (err) {
             console.log(err)
         }
     },
 
+
+    // 수정예정
     get_community_id: async (req, res) => {
         try {
             const id = req.params.id

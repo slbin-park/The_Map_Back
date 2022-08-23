@@ -11,7 +11,7 @@ const errResponse = ({ isSuccess, code, msg }) => {
     return {
         isSuccess,
         code,
-        message,
+        msg,
     };
 };
 

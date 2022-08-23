@@ -2,7 +2,7 @@ import '../config/env'
 import pool from '../config/db'
 const jwt = require('jsonwebtoken');
 import * as jwtRepository from './jwt.dao'
-
+import logger from '../config/winston'
 const create_access_token = (user_id) => {
     return new Promise((resolve, reject) => {
         resolve(
@@ -40,10 +40,10 @@ const check_access_token = (req, res, next) => {
         // body에 user_id 를 넣어서 보내줌
         req.body.user_id = token.user_id;
         next();
-    } catch (error) {
+    } catch (err) {
         logger.error(`App - check_access_token JWT error\n: ${err.message} \n${JSON.stringify(err)}`);
         // 유효기간이 초과된 경우
-        if (error.name === 'TokenExpiredError') {
+        if (err.name === 'TokenExpiredError') {
             res.status(419).send({ success: false, msg: '토큰이 만료되었습니다.' }); // 419 추가예정
         }
         // 토큰의 비밀키가 일치하지 않는 경우
@@ -60,10 +60,10 @@ const check_refresh_token = async (refresh_token) => {
         const user_data = await jwtRepository.Get_Refresh_Token(conn, refresh_token)
         // 유저 데이터를 리턴해줌
         return { success: true, user_data }
-    } catch (error) {
+    } catch (err) {
         logger.error(`App - check_refresh_token JWT error\n: ${err.message} \n${JSON.stringify(err)}`);
         // 유효기간이 초과된 경우
-        if (error.name === 'TokenExpiredError') {
+        if (err.name === 'TokenExpiredError') {
             return { success: false, msg: '토큰이 만료되었습니다.' }; // 419 추가예정
         }
         // 토큰의 비밀키가 일치하지 않는 경우

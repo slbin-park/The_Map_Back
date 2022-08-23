@@ -49,5 +49,5 @@ module.exports = {
     },
     //Connection, Transaction 등의 서버 오류
     DB_ERROR: { isSuccess: false, code: 4000, msg: '데이터 베이스 에러' },
-    SERVER_ERROR: { isSuccess: false, code: 4001, memsgssage: '서버 에러' },
+    SERVER_ERROR: { isSuccess: false, code: 4001, msg: '서버 에러' },
 };

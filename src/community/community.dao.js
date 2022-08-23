@@ -78,8 +78,8 @@ const getCommunityMain = async (conn, main_info) => {
         AND cm.longi <= ?
         )    
     `
-    const [get_community] = await conn.query(sql, main_info);
-    return get_community;
+    const [get_community_main] = await conn.query(sql, main_info);
+    return get_community_main;
 }
 
 const getCommunityImage = async (conn, commu_id) => {
@@ -102,6 +102,27 @@ const getCommunityTag = async (conn, commu_id) => {
     const [get_tag] = await conn.query(sql, commu_id);
     return get_tag;
 }
+
+const getCommunityAll = async (conn, last_community_id) => {
+    const sql = `
+    SELECT *
+    FROM community
+    WHERE id < ?
+    ORDER BY id DESC
+    LIMIT 10;
+    `
+    const [get_community] = await conn.query(sql, last_community_id);
+    return get_community;
+}
+
+const getCommunityCount = async (conn) => {
+    const sql = `
+    SELECT COUNT(*) as count 
+    FROM community
+    `
+    const [count] = await conn.query(sql);
+    return count;
+}
 export {
     insertPost,
     insertPostImg,
@@ -111,5 +132,7 @@ export {
     insertPostCate,
     getCommunityMain,
     getCommunityImage,
-    getCommunityTag
+    getCommunityTag,
+    getCommunityAll,
+    getCommunityCount
 }
