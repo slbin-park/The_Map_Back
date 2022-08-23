@@ -54,6 +54,20 @@ const CommunityController = {
         } catch (err) {
             console.log(err)
         }
+    },
+
+    /**
+     * 커뮤니티 좋아요 저장
+     */
+    post_community_like: async (req, res) => {
+        try {
+            const { user_id } = req.body;
+            const { community_id } = req.params
+            const response = await CommunityService.Save_community_like(user_id, community_id);
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 

@@ -12,6 +12,8 @@ router.get("/main/:user_id", CommunityController.get_main)
 // 게시글 저장하기
 router.post("/", JWT.check_access_token, CommunityController.post_community);
 
+// 커뮤니티 좋아요
+router.post("/like/:community_id", JWT.check_access_token, CommunityController.post_community_like)
 
 // 수정예정
 // router.get("/:id", CommunityController.get_community_id);

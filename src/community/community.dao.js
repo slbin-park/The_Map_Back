@@ -123,6 +123,31 @@ const getCommunityCount = async (conn) => {
     const [count] = await conn.query(sql);
     return count;
 }
+
+/**
+ * 커뮤니티 좋아요 저장
+ */
+const inserCommunityLike = async (conn, like_info) => {
+    const status = '`status`'
+    const sql = `
+    INSERT
+    INTO community_like(commu_id_fk, user_idx_fk, ${status})
+    VALUES ( ? , ? , ? );
+    `
+    const [like] = await conn.query(sql, like_info);
+    return like;
+}
+
+const getCommunityLike = async (conn, like_info) => {
+    const sql = `
+    SELECT *
+    FROM community_like
+    WHERE user_idx_fk= ?
+    AND commu_id_fk = ?;
+    `
+    const [like] = await conn.query(sql, like_info);
+    return like;
+}
 export {
     insertPost,
     insertPostImg,
@@ -134,5 +159,7 @@ export {
     getCommunityImage,
     getCommunityTag,
     getCommunityAll,
-    getCommunityCount
+    getCommunityCount,
+    inserCommunityLike,
+    getCommunityLike
 }

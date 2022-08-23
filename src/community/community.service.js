@@ -65,7 +65,7 @@ const Get_community_id = async function (id) {
             return { msg: '없는 게시글입니다.' }
         }
     } catch (err) {
-        logger.error(`App - Get_community CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        logger.error(`App - Get_community_id CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
     } finally {
         conn.release();
@@ -92,9 +92,35 @@ const Get_main = async function (start_lati, end_lati, start_longi, end_longi, u
     }
 }
 
+/**
+ * 커뮤니티 좋아요 저장
+ */
+
+const Save_community_like = async function (user_id, community_id) {
+    const status = 'ACTIVE'
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const like_info = [community_id, user_id, status]
+        const check_like_info = [user_id, community_id]
+        const check = await CommunityRepository.getCommunityLike(conn, check_like_info);
+        if (check.length) {
+            return response(baseResponse.ALREADY_LIKE_COMMUNITY);
+        }
+        await CommunityRepository.inserCommunityLike(conn, like_info);
+        await conn.commit();
+        return response(baseResponse.SUCCESS)
+    } catch (err) {
+        logger.error(`App - Save_community_like CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
+
 export {
     Save_community,
     Get_community,
     Get_community_id,
-    Get_main
+    Get_main,
+    Save_community_like
 }

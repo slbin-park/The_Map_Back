@@ -47,6 +47,11 @@ module.exports = {
         code: 3008,
         msg: '비공개 계정입니다.',
     },
+    ALREADY_LIKE_COMMUNITY: {
+        isSuccess: false,
+        code: 3009,
+        msg: '이미 좋아요를 누른 게시글입니다.',
+    },
     //Connection, Transaction 등의 서버 오류
     DB_ERROR: { isSuccess: false, code: 4000, msg: '데이터 베이스 에러' },
     SERVER_ERROR: { isSuccess: false, code: 4001, msg: '서버 에러' },
