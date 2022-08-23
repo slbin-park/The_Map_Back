@@ -71,9 +71,7 @@ const Get_main = async function (start_lati, end_lati, start_longi, end_longi, u
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         const main_info = [user_id, user_id, start_lati, end_lati, start_longi, end_longi]
-        console.log(main_info)
         const res = await CommunityRepository.getCommunityMain(conn, main_info);
-        console.log(res)
         return response(baseResponse.SUCCESS, res)
     } catch (err) {
         logger.error(`App - Get_main CommunityService error\n: ${err.message} \n${JSON.stringify(err)}`);
