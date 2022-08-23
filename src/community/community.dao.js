@@ -1,7 +1,7 @@
 const insertPost = async (conn, communityInfo) => {
     const sql = `INSERT
-    INTO community( home_name ,lati , longi , price ,site , reason , user_idx_fk, status , location) 
-    VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? );`
+    INTO community( home_name ,lati , longi , price ,site , reason , user_idx_fk, status , location , category) 
+    VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? ,? );`
 
     const [save_user] = await conn.query(sql,
         communityInfo
@@ -82,6 +82,26 @@ const getCommunityMain = async (conn, main_info) => {
     return get_community;
 }
 
+const getCommunityImage = async (conn, commu_id) => {
+    const sql = `
+        SELECT *
+        FROM community_image
+        WHERE commu_id_fk = ?
+    `
+    const [get_img] = await conn.query(sql, commu_id);
+    return get_img;
+}
+
+
+const getCommunityTag = async (conn, commu_id) => {
+    const sql = `
+        SELECT *
+        FROM community_tag
+        WHERE commu_id_fk = ?
+    `
+    const [get_tag] = await conn.query(sql, commu_id);
+    return get_tag;
+}
 export {
     insertPost,
     insertPostImg,
@@ -89,5 +109,7 @@ export {
     selectCommunity,
     selectCommunityId,
     insertPostCate,
-    getCommunityMain
+    getCommunityMain,
+    getCommunityImage,
+    getCommunityTag
 }

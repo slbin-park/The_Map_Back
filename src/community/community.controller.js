@@ -8,7 +8,6 @@ const CommunityController = {
     post_community: async (req, res) => {
         try {
             const { home_name, lati, longi, tag, price, site, reason, location, user_id, category, images } = req.body
-            console.log()
             const response = await CommunityService.Save_community(home_name, lati, longi, tag, price, site, reason, user_id, category, images, location)
             res.json(response);
         } catch (err) {
