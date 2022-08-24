@@ -5,13 +5,32 @@ import { response, errResponse } from '../config/response'
 import baseResponse from '../config/baseResponse'
 import logger from '../config/winston';
 
-// 숙소 저장
+/**
+ * 숙소 저장
+ * @param {*} home_name 
+ * @param {*} lati 
+ * @param {*} longi 
+ * @param {*} tags 
+ * @param {*} price 
+ * @param {*} site 
+ * @param {*} reason 
+ * @param {*} user_id 
+ * @param {*} category 
+ * @param {*} images 
+ * @param {*} location 
+ * @returns 
+ */
 const Save_community = async function (home_name, lati, longi, tags, price, site, reason, user_id, category, images, location) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
         await conn.beginTransaction()
         const status = 'ACTIVE'
         const community_info = [home_name, lati, longi, price, site, reason, user_id, status, location, category]
+        const community_check_info = [lati, longi, user_id]
+        const community_check = await CommunityRepository.checkCommunity(conn, community_check_info);
+        if (community_check.length) {
+            return response(baseResponse.ALREADY_SAVE_COMMUNITY);
+        }
         const res = await CommunityRepository.insertPost(conn, community_info);
         for (let image_url of images) {
             const insertPostImgParams = [res.insertId, image_url];

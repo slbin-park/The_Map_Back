@@ -29,6 +29,24 @@ const insertPostTag = async (conn, tag_info) => {
     return save_img;
 }
 
+/**
+ * 이미 등록한 숙소인지 확인
+ */
+const checkCommunity = async (conn, communityInfo) => {
+    const sql = `
+    SELECT *
+    FROM community
+    WHERE lati = ?
+    AND longi = ? 
+    AND user_idx_fk = ?
+    `
+
+    const [save_user] = await conn.query(sql,
+        communityInfo
+    );
+    return save_user;
+}
+
 const insertPostCate = async (conn, cate_info) => {
     const sql = `
         INSERT INTO
@@ -176,5 +194,6 @@ export {
     getCommunityAll,
     getCommunityCount,
     inserCommunityLike,
-    getCommunityLike
+    getCommunityLike,
+    checkCommunity
 }
