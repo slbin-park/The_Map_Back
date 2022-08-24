@@ -89,7 +89,6 @@ const Post_login = async function (user_id, password) {
 const Get_access_token = async function (refresh_token) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        console.log('실행')
         const user_data = await jwt.check_refresh_token(refresh_token)
         if (user_data.success) {
             const user_idx = user_data.user_data[0].user_idx
