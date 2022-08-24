@@ -73,10 +73,19 @@ const Get_community_id = async function (id) {
     }
 }
 
+/**
+ * 
+ * @param {*} start_lati 북동 위도 (오른쪽위)
+ * @param {*} end_lati 남서 위도 (왼쪽밑)
+ * @param {*} start_longi 북동 경도 (오른쪽위) 경도는 오른쪽이 더 작음
+ * @param {*} end_longi 남서 경도 (왼쪽밑)
+ * @param {*} user_id 
+ * @returns 
+ */
 const Get_main = async function (start_lati, end_lati, start_longi, end_longi, user_id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        const main_info = [user_id, user_id, end_lati, start_lati, start_longi, end_longi]
+        const main_info = [user_id, user_id, end_lati, start_lati, , end_longi, start_longi]
         const res = await CommunityRepository.getCommunityMain(conn, main_info);
         for (let commu_id of res) {
             const img = await CommunityRepository.getCommunityImage(conn, commu_id.id);
