@@ -26,6 +26,7 @@ router.get("/password/:user_id/:user_name", UserController.check_user_password);
 router.put("/password", JWT.check_access_token, UserController.update_user_password);
 
 // 팔로우
+router.post("/follow/:following_user_id", JWT.check_access_token, UserController.save_follow);
 
 // --------테스트 요청--------
 

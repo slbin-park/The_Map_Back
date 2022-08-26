@@ -93,6 +93,20 @@ const UserController = {
             console.log(err)
         }
     },
+
+    /**
+     * 팔로우 하기
+     */
+    save_follow: async (req, res) => {
+        try {
+            const { user_id } = req.body
+            const { following_user_id } = req.params
+            const response = await UserService.Save_follow(user_id, following_user_id)
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
+    },
 }
 
 

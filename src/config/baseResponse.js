@@ -57,6 +57,11 @@ module.exports = {
         code: 3010,
         msg: '이미 저장한 숙소입니다.',
     },
+    ALREADY_Follow: {
+        isSuccess: false,
+        code: 3011,
+        msg: '이미 팔로우한 대상입니다.',
+    },
     //Connection, Transaction 등의 서버 오류
     DB_ERROR: { isSuccess: false, code: 4000, msg: '데이터 베이스 에러' },
     SERVER_ERROR: { isSuccess: false, code: 4001, msg: '서버 에러' },

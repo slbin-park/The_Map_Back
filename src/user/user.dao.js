@@ -62,6 +62,34 @@ const updateUserPassword = async (conn, user_info) => {
     return user;
 }
 
+
+/**
+ * 팔로우 체크
+ */
+const checkFollow = async (conn, follow_info) => {
+    const sql = `
+    SELECT *
+    FROM follow
+    WHERE follower_id_fk = ? 
+    AND following_id_fk = ?
+    `
+    const [res] = await conn.query(sql, follow_info)
+    return res
+}
+
+
+/**
+ * 팔로우 저장
+ */
+const insertFollow = async (conn, follow_info) => {
+    const sql = `
+    INSERT
+    INTO follow(follower_id_fk, following_id_fk, follow_status)
+    VALUES(? , ? , ?)
+    `
+    const [res_f] = await conn.query(sql, follow_info);
+    return res_f
+}
 export {
     insertPost,
     selectUser,
@@ -69,5 +97,7 @@ export {
     updateUserProfile,
     getUserId,
     checkUser,
-    updateUserPassword
+    updateUserPassword,
+    checkFollow,
+    insertFollow
 }

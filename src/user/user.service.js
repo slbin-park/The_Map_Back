@@ -172,6 +172,28 @@ const Update_user_password = async function (user_id, password) {
     }
 }
 
+/**
+ * 팔로우 저장
+ */
+const Save_follow = async function (follower_id_fk, following_id_fk) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const check_info = [follower_id_fk, following_id_fk]
+        const check = await UserRepository.checkFollow(conn, check_info)
+        if (check.length) {
+            return response(baseResponse.ALREADY_Follow)
+        }
+        const follow_info = [follower_id_fk, following_id_fk]
+        await UserRepository.insertFollow(conn,)
+        await conn.commit();
+        return response(baseResponse.SUCCESS)
+    } catch (err) {
+        logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
 
 export {
     Save_user,
@@ -180,5 +202,6 @@ export {
     Update_user_profile,
     Get_user_id,
     Check_user,
-    Update_user_password
+    Update_user_password,
+    Save_follow
 }
