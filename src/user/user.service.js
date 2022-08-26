@@ -43,8 +43,12 @@ const Get_user_id = async function (user_name, email) {
     try {
         const user_info = [user_name, email]
         const res = await UserRepository.getUserId(conn, user_info)
+        if (res.length) {
+            return response(baseResponse.SUCCESS, { res: res[0] })
+        }
+        return response(baseResponse.SIGN_USER_NOTHING)
         conn.commit();
-        return response(baseResponse.SUCCESS, res)
+
     } catch (err) {
         logger.error(`App - Get_user UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
