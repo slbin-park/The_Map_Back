@@ -203,7 +203,7 @@ const Save_follow = async function (follower_id_fk, following_id_fk) {
 const Get_Follow = async function (user_id) {
     const conn = await pool.getConnection(async (conn) => conn);
     try {
-        const follower = await UserRepository.getFollower(conn, user_id)
+        const follower = await UserRepository.getFollower(conn, [user_id, user_id])
         const follwing = await UserRepository.getFollowing(conn, user_id)
         return response(baseResponse.SUCCESS, { follower, follwing })
     } catch (err) {

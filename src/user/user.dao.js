@@ -111,11 +111,15 @@ const getFollowing = async (conn, follow_info) => {
  */
 const getFollower = async (conn, follow_info) => {
     const sql = `
-    SELECT us.profile_Url , us.user_idx , us.user_name
+    SELECT us.profile_Url , us.user_idx , us.user_name ,
+    IF((SELECT fl.follow_status
+    FROM follow fl
+    WHERE fl.follower_id_fk = ?
+    AND fl.following_id_fk = fw.follower_id_fk) = 'ACTIVE','Y','N') as follow_status
     FROM follow fw
     LEFT JOIN user us
     ON fw.follower_id_fk = us.user_idx
-    WHERE following_id_fk = ?`
+    WHERE fw.following_id_fk = ?`
     const [res] = await conn.query(sql, follow_info)
     return res
 }
