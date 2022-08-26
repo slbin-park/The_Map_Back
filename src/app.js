@@ -14,8 +14,8 @@ app.get("/test/aws", (req, res) => {
     console.log('접속했냐')
     res.send('아마존 테스트 성공')
 })
-app.get('/', function (req, res) {
+app.use("/api", routing);
+app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, './build/index.html'));
 });
-app.use("/api", routing);
 export default app;
