@@ -98,7 +98,7 @@ const Get_access_token = async function (refresh_token) {
         if (user_data.success) {
             const user_idx = user_data.user_data[0].user_idx
             const user_name = user_data.user_data[0].user_name
-            const profile_img = user_data[0].profile_Url
+            const profile_img = user_data.user_data[0].profile_Url
             const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
             conn.commit();
             return response(baseResponse.SUCCESS, { user_idx, user_name, access_token, profile_img })
