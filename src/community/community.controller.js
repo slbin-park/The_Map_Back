@@ -8,6 +8,7 @@ const CommunityController = {
     post_community: async (req, res) => {
         try {
             const { home_name, lati, longi, tag, price, site, reason, location, user_id, category, images } = req.body
+            console.log(req.body)
             const response = await CommunityService.Save_community(home_name, lati, longi, tag, price, site, reason, user_id, category, images, location)
             res.json(response);
         } catch (err) {
@@ -37,7 +38,8 @@ const CommunityController = {
     get_community: async (req, res) => {
         try {
             const { last_community_id } = req.params
-            const response = await CommunityService.Get_community(last_community_id)
+            const { user_id } = req.body || 0
+            const response = await CommunityService.Get_community(last_community_id, user_id)
             res.send(response);
         } catch (err) {
             console.log(err)

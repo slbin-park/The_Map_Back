@@ -68,8 +68,9 @@ const Post_login = async function (user_id, password) {
                 await jwt.save_refresh_token(user_data[0].user_idx, refresh_token)
                 const user_idx = user_data[0].user_idx
                 const user_name = user_data[0].user_name
+                const profile_img = user_data[0].profile_Url
                 conn.commit();
-                return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name })
+                return response(baseResponse.SUCCESS, { access_token, refresh_token, user_idx, user_name, profile_img })
             }
             else {
                 return response(baseResponse.LOGIN_FAIL)
@@ -93,9 +94,10 @@ const Get_access_token = async function (refresh_token) {
         if (user_data.success) {
             const user_idx = user_data.user_data[0].user_idx
             const user_name = user_data.user_data[0].user_name
+            const profile_img = user_data[0].profile_Url
             const access_token = await jwt.create_access_token(user_data.user_data[0].user_idx)
             conn.commit();
-            return response(baseResponse.SUCCESS, { user_idx, user_name, access_token })
+            return response(baseResponse.SUCCESS, { user_idx, user_name, access_token, profile_img })
         }
         else {
             return response(baseResponse.TOKEN_VERIFICATION_FAILURE)

@@ -125,6 +125,7 @@ const getCommunityTag = async (conn, commu_id) => {
  * 팔로우상태로직도 넣어보기
  */
 const getCommunityAll = async (conn, last_community_id) => {
+    const like = '`like`'
     const sql = `
     SELECT cm.* , us.user_name , us.profile_Url,
     case
@@ -137,6 +138,16 @@ const getCommunityAll = async (conn, last_community_id) => {
             then 'FOLLOW'
         else 'UNFOLLOW'
         end as follow
+    ,
+    case
+        when (SELECT status
+            FROM community_like
+            WHERE commu_id_fk = cm.id 
+            AND user_idx_fk = ?
+            ) = 'ACTIVE'
+            then 'LIKE'
+        else 'UNLIKE'
+        end as ${like}
     FROM community cm
     LEFT JOIN user us
     ON cm.user_idx_fk = us.user_idx
