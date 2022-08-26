@@ -177,16 +177,35 @@ const Update_user_password = async function (user_id, password) {
  */
 const Save_follow = async function (follower_id_fk, following_id_fk) {
     const conn = await pool.getConnection(async (conn) => conn);
+    const STATUS = 'ACTIVE'
     try {
         const check_info = [follower_id_fk, following_id_fk]
         const check = await UserRepository.checkFollow(conn, check_info)
         if (check.length) {
             return response(baseResponse.ALREADY_Follow)
         }
-        const follow_info = [follower_id_fk, following_id_fk]
-        await UserRepository.insertFollow(conn,)
+        const follow_info = [follower_id_fk, following_id_fk, STATUS]
+        await UserRepository.insertFollow(conn, follow_info)
         await conn.commit();
         return response(baseResponse.SUCCESS)
+    } catch (err) {
+        logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        conn.release();
+    }
+}
+
+
+/**
+ * 팔로워 팔로잉 불러오기
+ */
+const Get_Follow = async function (user_id) {
+    const conn = await pool.getConnection(async (conn) => conn);
+    try {
+        const follower = await UserRepository.getFollower(conn, user_id)
+        const follwing = await UserRepository.getFollowing(conn, user_id)
+        return response(baseResponse.SUCCESS, { follower, follwing })
     } catch (err) {
         logger.error(`App - Update_user_profile UserService error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -203,5 +222,6 @@ export {
     Get_user_id,
     Check_user,
     Update_user_password,
-    Save_follow
+    Save_follow,
+    Get_Follow
 }

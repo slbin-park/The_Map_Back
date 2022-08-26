@@ -25,8 +25,11 @@ router.get("/password/:user_id/:user_name", UserController.check_user_password);
 // 비밀번호 변경
 router.put("/password", JWT.check_access_token, UserController.update_user_password);
 
-// 팔로우
+// 팔로우 하기
 router.post("/follow/:following_user_id", JWT.check_access_token, UserController.save_follow);
+
+// 팔로워 팔로잉 정보 가져오기
+router.get("/follow/:user_id", UserController.get_follow);
 
 // --------테스트 요청--------
 

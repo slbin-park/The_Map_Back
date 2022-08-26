@@ -107,6 +107,19 @@ const UserController = {
             console.log(err)
         }
     },
+
+    /**
+     * 팔로워 팔로잉 정보 가져오기
+     */
+    get_follow: async (req, res) => {
+        try {
+            const { user_id } = req.params
+            const response = await UserService.Get_Follow(user_id)
+            res.json(response);
+        } catch (err) {
+            console.log(err)
+        }
+    },
 }
 
 

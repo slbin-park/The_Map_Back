@@ -90,6 +90,36 @@ const insertFollow = async (conn, follow_info) => {
     const [res_f] = await conn.query(sql, follow_info);
     return res_f
 }
+
+/**
+ * 팔로잉 불러오기
+ */
+const getFollowing = async (conn, follow_info) => {
+    const sql = `
+    SELECT us.profile_Url , us.user_idx , us.user_name
+    FROM follow fw
+    LEFT JOIN user us
+    ON fw.following_id_fk = us.user_idx
+    WHERE follower_id_fk = ?
+    `
+    const [res] = await conn.query(sql, follow_info)
+    return res
+}
+
+/**
+ * 팔로워 불러오기
+ */
+const getFollower = async (conn, follow_info) => {
+    const sql = `
+    SELECT us.profile_Url , us.user_idx , us.user_name
+    FROM follow fw
+    LEFT JOIN user us
+    ON fw.follower_id_fk = us.user_idx
+    WHERE following_id_fk = ?`
+    const [res] = await conn.query(sql, follow_info)
+    return res
+}
+
 export {
     insertPost,
     selectUser,
@@ -99,5 +129,7 @@ export {
     checkUser,
     updateUserPassword,
     checkFollow,
-    insertFollow
+    insertFollow,
+    getFollowing,
+    getFollower
 }
